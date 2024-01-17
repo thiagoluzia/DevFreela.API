@@ -18,8 +18,7 @@ namespace DevFreela.API.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            //Consulta o Objeto
-            //return NotFound();
+            //Buscar, se não existir, retorna NotFound
 
             return Ok();
         }
@@ -61,6 +60,27 @@ namespace DevFreela.API.Controllers
             
             //Remover
 
+            return NoContent();
+        }
+
+        //api/projects/{id}/comments
+        [HttpPost("{id}/comments")]
+        public IActionResult PostCopmment(int id, [FromBody] CreateCommentModel comment)
+        {
+            return NoContent();
+        }
+
+        //api/projects/{id}/start
+        [HttpPut("{id}/start")]
+        public IActionResult PutStart(int id)
+        {
+            return NoContent();
+        }
+
+        //api/projects/{id}/finish
+        [HttpPut("{id}/finish")]
+        public IActionResult PutFinish(int id)
+        {
             return NoContent();
         }
     }
