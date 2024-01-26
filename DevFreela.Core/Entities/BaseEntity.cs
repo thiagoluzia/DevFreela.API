@@ -3,6 +3,6 @@
     public abstract class BaseEntity
     {
         public BaseEntity(){}
-        public int ID { get; private set; }
+        public int Id { get; private set; }
     }
 }
