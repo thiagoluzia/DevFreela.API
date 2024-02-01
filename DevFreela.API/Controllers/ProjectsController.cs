@@ -2,6 +2,7 @@
 using DevFreela.API.Models;
 using DevFreela.Application.InputModels;
 using DevFreela.Application.Services.Interfaces;
+using DevFreela.Application.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
@@ -23,6 +24,11 @@ namespace DevFreela.API.Controllers
             //Filtrar ou consultar o objeto
 
             var projects = _projectService.GetAll(query);
+            
+            if(projects == null)
+            {
+                return NotFound("Nenhum projeto encontrado!");
+            }
 
             return Ok(projects);
         }
@@ -62,6 +68,7 @@ namespace DevFreela.API.Controllers
         [HttpPut("id")]
         public IActionResult Put([FromBody] UpdateProjectInputModel inputModel, int id)
         {
+
             if (inputModel.Description.Length > 200)
             {
                 return BadRequest();
