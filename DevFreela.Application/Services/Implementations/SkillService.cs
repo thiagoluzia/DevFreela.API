@@ -15,6 +15,7 @@ namespace DevFreela.Application.Services.Implementations
 
         public List<SkillViewModel> GetAll()
         {
+            //Buscar no banco de dados
             var skills = _dbContext.Skills;
 
             //mapeamento do retorno 
@@ -22,6 +23,7 @@ namespace DevFreela.Application.Services.Implementations
                 .Select(x => new SkillViewModel(x.Id, x.Description))
                 .ToList();
 
+            //Retornar
             return skillViewModel;
         }
     }

@@ -1,7 +1,8 @@
-﻿namespace DevFreela.Application.Dtos_Thiago.InputModels
+﻿using MediatR;
+
+namespace DevFreela.Application.Command.CreateProject
 {
-    //NewProjectInputModel
-    public class CreateProjectInputModel
+    public class CreateProjectCommand : IRequest<Unit>
     {
         public string Title { get; set; }
         public string Description { get; set; }

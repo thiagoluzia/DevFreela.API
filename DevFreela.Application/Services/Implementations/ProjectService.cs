@@ -22,46 +22,6 @@ namespace DevFreela.Application.Services.Implementations
 
         }
 
-        public int Create(NewProjectInputModel inputModel)
-        {
-
-            var project = new Project(
-                inputModel.Title,
-                inputModel.Description,
-                inputModel.IdCliente,
-                inputModel.IdFreelancer,
-                inputModel.TotalCost);
-
-            _dbContext.Projects.Add(project);
-            _dbContext.SaveChanges();
-
-            return project.Id;
-
-        }
-
-        public void Delete(int id)
-        {
-            try
-            {
-                var projetc = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
-                projetc.Cancel();
-                _dbContext.SaveChanges();
-            }
-            catch (DbUpdateConcurrencyException ex)
-            {
-                throw new Exception($"Erro de concorrência ao atualizar o banco de dados: {ex.Message}");
-            }
-            catch (DbUpdateException ex)
-            {
-                throw new Exception($"Erro de atualização no banco de dados: { ex.Message }");
-            }catch (Exception)
-            {
-                throw new Exception("Ocorreu um erro inesperado:");
-            }
-            
-            
-        }
-
         public void Finish(int id)
         {
             var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
@@ -70,57 +30,57 @@ namespace DevFreela.Application.Services.Implementations
             _dbContext.SaveChanges();
         }
 
-        public List<ProjectViewModel> GetAll(string query)
-        {
-            #region Com EF
+        //public List<ProjectViewModel> GetAll(string query)
+        //{
+        //    #region Com EF
 
-            //var projects = _dbContext.Projects;
+        //    var projects = _dbContext.Projects;
 
-            //var projectsViewModel = projects
-            //    .Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt))
-            //    .ToList();
+        //    var projectsViewModel = projects
+        //        .Select(p => new ProjectViewModel(p.Id, p.Title, p.CreatedAt))
+        //        .ToList();
 
-            //return projectsViewModel;
+        //    return projectsViewModel;
 
-            #endregion
+        //    #endregion
 
-            #region Com Dapper
+        //    #region Com Dapper
 
-            using (var sqlConnection = new SqlConnection(_connectionString))
-            {
-                var script = "SELECT Id, Title, CreatedAt FROM Projects";
+        //    //using (var sqlConnection = new SqlConnection(_connectionString))
+        //    //{
+        //    //    var script = "SELECT Id, Title, CreatedAt FROM Projects";
 
-                return sqlConnection.Query<ProjectViewModel>(script).ToList();
-            }
+        //    //    return sqlConnection.Query<ProjectViewModel>(script).ToList();
+        //    //}
 
-            #endregion
-        }
+        //    #endregion
+        //}
 
-        public ProjectDetailsViewModel GetById(int id)
-        {
-            var project = _dbContext.Projects
-                .Include(p => p.Client)
-                .Include(p => p.Freelancer)
-                .SingleOrDefault(p => p.Id == id);
+        //public ProjectDetailsViewModel GetById(int id)
+        //{
+        //    var project = _dbContext.Projects
+        //        .Include(p => p.Client)
+        //        .Include(p => p.Freelancer)
+        //        .SingleOrDefault(p => p.Id == id);
 
-            if (project == null)
-            {
-                return null;
-            }
+        //    if (project == null)
+        //    {
+        //        return null;
+        //    }
 
-            var projectDetailsViewModel = new ProjectDetailsViewModel(
-                project.Id,
-                project.Title,
-                project.Description,
-                project.TotalCost,
-                project.StartedAt,
-                project.FinishedAt,
-                project.Client.FullName,
-                project.Freelancer.FullName
-                );
+        //    var projectDetailsViewModel = new ProjectDetailsViewModel(
+        //        project.Id,
+        //        project.Title,
+        //        project.Description,
+        //        project.TotalCost,
+        //        project.StartedAt,
+        //        project.FinishedAt,
+        //        project.Client.FullName,
+        //        project.Freelancer.FullName
+        //        );
 
-            return projectDetailsViewModel;
-        }
+        //    return projectDetailsViewModel;
+        //}
 
         public void Start(int id)
         {
@@ -158,5 +118,6 @@ namespace DevFreela.Application.Services.Implementations
             _dbContext.SaveChanges();
 
         }
+   
     }
 }
