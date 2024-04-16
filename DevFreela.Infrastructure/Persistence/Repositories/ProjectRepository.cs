@@ -40,7 +40,7 @@ namespace DevFreela.Infrastructure.Persistence.Repositories
             #region Com DAPPER
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
-                var script = "SELECT Id, Title, CreatedAt FROM Projects";
+                var script = "SELECT Id as Id , Title as Title , CreatedAt as CreatedAt FROM Projects";
                 var projecs = await sqlConnection.QueryAsync<Project>(script);
 
                 return projecs.ToList();

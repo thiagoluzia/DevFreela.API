@@ -1,50 +1,73 @@
 ﻿using DevFreela.API.Models;
+using DevFreela.Application.Command.CreateUserCommand;
+using DevFreela.Application.Command.LoginUser;
 using DevFreela.Application.InputModels;
+using DevFreela.Application.Queries.GetUser;
 using DevFreela.Application.Services.Interfaces;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
 {
     [Route("api/[controller]")]
-    public class UsersController : Controller
+    [Authorize]
+    public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IMediator _mediator;
 
-        public UsersController(IUserService userService)
+
+        public UsersController(IUserService userService, IMediator mediator)
         {
             _userService = userService;
+            _mediator = mediator;
         }
 
 
         //api/users
         [HttpPost]
-        public IActionResult Post([FromBody] CreateUserInputModel inputModel)
+        [AllowAnonymous]
+        public async Task<IActionResult> PostAsync([FromBody]CreateUserCommand command)
         {
-            var id = _userService.Create(inputModel);
+            var id = await  _mediator.Send(command);
 
-            return CreatedAtAction(nameof(GetById), new { id = id }, inputModel);
+            return CreatedAtAction(nameof(GetByIdAsync), new { id = id }, command);
+
         }
 
         //api/users/{id}
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetByIdAsync(int id)
         {
-            //Buscar, se não existir, retorna NotFound
-            var user = _userService.GetUser(id);
+            var command = new GetUserQuery(id);
+            var userViewModel = await _mediator.Send(command);
 
-            if(user == null)
-            {
-                return NotFound();
-            }
+            return Ok(userViewModel);
+
+            //Buscar, se não existir, retorna NotFound
+            //var user = _userService.GetUser(id);
+
+            //if(user == null)
+            //{
+            //    return NotFound();
+            //}
             
-            return Ok(user);
+            //return Ok(user);
         }
 
         //api/users/{id}
-        [HttpPut("{id}")]
-        public IActionResult Login(int id, [FromBody] LoginModel login)
+        [HttpPut("login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login([FromBody] LoginUserCommand command)
         {
-            return NoContent();
+            var loginViewModel = await _mediator.Send(command);
+
+            if(loginViewModel is null)
+                return BadRequest();
+
+
+            return Ok(loginViewModel);
         }
     }
 }

@@ -17,6 +17,9 @@ namespace DevFreela.Core.Entities
             Comments = new List<ProjectComment>();
         }
 
+        public Project() 
+        {}
+
         public string? Title { get; private set; }
         public string? Description { get; private set; }
         public int IdClient { get; private set; }

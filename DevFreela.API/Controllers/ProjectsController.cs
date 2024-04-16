@@ -9,11 +9,13 @@ using DevFreela.Application.Queries.GetProjetcById;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Application.ViewModels;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DevFreela.API.Controllers
 {
     [Route("api/[controller]")]
+    [Authorize(Roles ="client, freelancer")]
     public class ProjectsController : ControllerBase
     {
         private readonly IProjectService _projectService;
@@ -28,6 +30,7 @@ namespace DevFreela.API.Controllers
 
         //api/projects
         [HttpPost]
+        [Authorize(Roles = "client")]
         public async Task<IActionResult> Post([FromBody] CreateProjectCommand comamnd) 
         {
             
@@ -112,8 +115,19 @@ namespace DevFreela.API.Controllers
 
         //api/projects/{id}/start
         [HttpPut("{id}/start")]
+        [Authorize(Roles = "freelancer")]
         public IActionResult PutStart(int id)
         {
+            //if (!User.Identity.IsAuthenticated)
+            //{
+            //    return Unauthorized("Usuario não altenticado.");
+            //}
+
+            if (!User.IsInRole("freelancer"))
+            {
+                return Forbid("Usuario não possui permissão.");
+            }
+
             _projectService.Start(id);
 
             return NoContent();
