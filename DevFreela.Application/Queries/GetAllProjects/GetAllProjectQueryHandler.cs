@@ -28,6 +28,11 @@ namespace DevFreela.Application.Queries.GetAllProjects
 
             _connectionString = configuration.GetConnectionString("DevFreelaCs");
         }
+
+        public GetAllProjectQueryHandler(IProjectRepositoriy repository)
+        {
+            _repository = repository;
+        }
         public async Task<List<ProjectViewModel>> Handle(GetAllProjectsQuery request, CancellationToken cancellationToken)
         {
             #region Com EF

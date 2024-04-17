@@ -4,7 +4,7 @@ using MediatR;
 
 namespace DevFreela.Application.Command.CreateProject
 {
-    public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, Unit>
+    public class CreateProjectCommandHandler : IRequestHandler<CreateProjectCommand, int>
     {
         private readonly IProjectRepositoriy _projectRepositoriy;
 
@@ -15,13 +15,13 @@ namespace DevFreela.Application.Command.CreateProject
         }
 
 
-        public async Task<Unit> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateProjectCommand request, CancellationToken cancellationToken)
         {
             //Preencho o objeto
             var project = new Project(
                 request.Title,
                 request.Description,
-                request.IdCliente,
+                request.IdClient,
                 request.IdFreelancer,
                 request.TotalCost);
 
@@ -29,7 +29,7 @@ namespace DevFreela.Application.Command.CreateProject
             await _projectRepositoriy.AddProject(project);
             
             //Retorno Void
-            return Unit.Value;
+            return project.Id;
         }
     }
 }

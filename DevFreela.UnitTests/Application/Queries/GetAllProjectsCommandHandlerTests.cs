@@ -1,4 +1,5 @@
-﻿using DevFreela.Application.Queries.GetAllProjects;
+﻿using Castle.Core.Configuration;
+using DevFreela.Application.Queries.GetAllProjects;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
 using Moq;
@@ -14,7 +15,7 @@ namespace DevFreela.UnitTests.Application.Queries
     public class GetAllProjectsCommandHandlerTests
     {
         [Fact]
-        public void ThreeProjectExiste_Executed_ReturnThreeProjectViewModels()
+        public async Task ThreeProjectExiste_Executed_ReturnThreeProjectViewModels()
         {
             // Arrange
             var projects = new List<Project>
@@ -24,11 +25,11 @@ namespace DevFreela.UnitTests.Application.Queries
                 new Project("Nome Do Teste 3", "Descricao De Teste 3", 1, 2, 30000)
             };
 
-            var projectRepositoryMock = new Mock<IProjectRepository>();
+            var projectRepositoryMock = new Mock<IProjectRepositoriy>();
             projectRepositoryMock.Setup(pr => pr.GetAllAsync().Result).Returns(projects);
 
-            var getAllProjectsQuery = new GetAllProjectsQuery("");
-            var getAllProjectsQueryHandler = new GetAllProjectsQueryHandler(projectRepositoryMock.Object);
+            var getAllProjectsQuery = new GetAllProjectsQuery();
+            var getAllProjectsQueryHandler = new GetAllProjectQueryHandler(projectRepositoryMock.Object);
 
             // Act
             var projectViewModelList = await getAllProjectsQueryHandler.Handle(getAllProjectsQuery, new CancellationToken());

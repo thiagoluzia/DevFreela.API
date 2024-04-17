@@ -1,4 +1,4 @@
-﻿using DevFreela.Application.Commands.CreateProject;
+﻿using DevFreela.Application.Command.CreateProject;
 using DevFreela.Core.Entities;
 using DevFreela.Core.Repositories;
 using Moq;
@@ -14,7 +14,7 @@ namespace DevFreela.UnitTests.Application.Commands
         public async Task InputDataIsOk_Executed_ReturnProjectId()
         {
             // ARRANGE
-            var projectRepository = new Mock<IProjectRepository>();
+            var projectRepository = new Mock<IProjectRepositoriy>();
 
             var createProjectCommand = new CreateProjectCommand
             {
@@ -33,7 +33,7 @@ namespace DevFreela.UnitTests.Application.Commands
             // ASSERT
             Assert.True(id >= 0);
 
-            projectRepository.Verify(pr => pr.AddAsync(It.IsAny<Project>()), Times.Once);
+            projectRepository.Verify(pr => pr.AddProject(It.IsAny<Project>()), Times.Once);
         }
     }
 }
