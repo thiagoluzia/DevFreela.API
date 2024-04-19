@@ -16,7 +16,6 @@ namespace DevFreela.Application.Command.FinishProject
         {
             _repository = repository;
             _paymentService = paymentService;
-
         }
 
 
@@ -27,7 +26,7 @@ namespace DevFreela.Application.Command.FinishProject
 
             var paymentInfoDto = new PaymentInfoDTO(request.Id, request.CreditCardNumber, request.Cvv, request.ExpiresAt, request.FullName, project.TotalCost);
 
-            await _paymentService.ProccessPayment(paymentInfoDto);
+            _paymentService.ProccessPayment(paymentInfoDto);
 
             project.SetPaymentPending();
 

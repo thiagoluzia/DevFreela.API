@@ -4,6 +4,7 @@ using DevFreela.Application.Services.Interfaces;
 using DevFreela.Core.Repositories;
 using DevFreela.Core.Services;
 using DevFreela.Infrastructure.Auth;
+using DevFreela.Infrastructure.MessageBus;
 using DevFreela.Infrastructure.Payments;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Persistence.Repositories;
@@ -16,7 +17,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DevFreelaCs");
 builder.Services.AddDbContext<DevFreelaDbContext>(options => options.UseSqlServer(connectionString));
@@ -27,14 +27,16 @@ builder.Services.AddHttpClient();
 builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<IAuthService, AuthService>();
-
 
 //Implementação via Repository
 builder.Services.AddScoped<IProjectRepositoriy, ProjectRepository>();
 builder.Services.AddScoped<ISkillsRepository, SkillRepository>();
 builder.Services.AddScoped<IUsersRepository, UserRepository>();
+
+//Implemntação de serviços integrados
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IMessageBusService, MessageBusService>();
 
 
 //MEDIATOR
