@@ -1,25 +1,27 @@
 using DevFreela.Application.Command.CreateProject;
-using DevFreela.Application.Command.DeleteProject;
 using DevFreela.Application.Services.Implementations;
 using DevFreela.Application.Services.Interfaces;
 using DevFreela.Core.Repositories;
 using DevFreela.Core.Services;
 using DevFreela.Infrastructure.Auth;
+using DevFreela.Infrastructure.Payments;
 using DevFreela.Infrastructure.Persistence;
 using DevFreela.Infrastructure.Persistence.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DevFreelaCs");
 builder.Services.AddDbContext<DevFreelaDbContext>(options => options.UseSqlServer(connectionString));
+
+builder.Services.AddHttpClient();
 
 //Implemntação via service
 builder.Services.AddScoped<IProjectService, ProjectService>();
@@ -27,10 +29,13 @@ builder.Services.AddScoped<ISkillService, SkillService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+
 //Implementação via Repository
 builder.Services.AddScoped<IProjectRepositoriy, ProjectRepository>();
 builder.Services.AddScoped<ISkillsRepository, SkillRepository>();
 builder.Services.AddScoped<IUsersRepository, UserRepository>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+
 
 //MEDIATOR
 builder.Services.AddMediatR(typeof(CreateProjectCommand));
